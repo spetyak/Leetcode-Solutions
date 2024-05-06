@@ -1,15 +1,23 @@
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.Stack;
 
+/**
+ * @author spetyak
+ */
 public class lc30 {
 
-    public List<Integer> findSubstring(String s, String[] words) {
+    /**
+     * Method which takes a string and a list of words and searches for substrings which are
+     * complete concatenations of the words within the string.
+     * 
+     * @param s the given string to be searched
+     * @param words the words who may be concatenated within the string in any permutation
+     * 
+     * @return the indices of legal substrings
+     */
+    public static List<Integer> findSubstring(String s, String[] words) {
 
         List<Integer> returnList = new ArrayList<>();
 
@@ -127,10 +135,8 @@ public class lc30 {
 
         String s = "barfoothefoobarman";
         String[] words = {"foo","bar"};
-    
-        lc30 n = new lc30();
         
-        List<Integer> indeces = n.findSubstring(s, words);
+        List<Integer> indeces = findSubstring(s, words);
 
         System.out.println("Indices: " + indeces);
     
