@@ -5,6 +5,9 @@ import java.util.Map;
 
 /**
  * @author spetyak
+ * 
+ * Runtime: Beat 14.93% of Java submissions
+ * Memory: Beat 34.83% of Java submissions
  */
 public class lc30 {
 
