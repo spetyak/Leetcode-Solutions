@@ -1,8 +1,11 @@
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.Stack;
 
 public class lc30 {
 
@@ -10,39 +13,111 @@ public class lc30 {
 
         List<Integer> returnList = new ArrayList<>();
 
-        int startIndex = 0;
-        int endIndex = words.length * words[0].length();
+        int strLength = s.length();
+        int wordLength = words[0].length();
+        int wordsLength = words.length;
+        int concatLength = wordsLength * wordLength;
 
-        while (endIndex <= s.length()) {
+        Integer count = null;
 
-            List<String> wordList = new ArrayList<>(Arrays.asList(words));
+        Map<String, Integer> wordMap = new HashMap<>();
 
-            String sub = s.substring(startIndex, endIndex);
+        Integer checkNum = null;
+        Integer occurences = null;
 
-            for (int i = 0; i < words.length; i++) {
+        String currentWord = "";
+        Integer currentCount = null;
 
-                String subWord = sub.substring(i*words[0].length(), (i+1)*words[0].length());
+        boolean allMatch = true;
 
-                if (wordList.contains(subWord)) {
+        String currentWords = "";
+        Map<String, Integer> currentMap = null;
 
-                    wordList.remove(wordList.indexOf(subWord));
+        for (int i = 0; i < wordsLength; i++)
+        {
+            count = wordMap.get(words[i]);
+            if (count == null)
+            {
+                count = 1;
+            }
+            else
+            {
+                count++;
+            }
+            wordMap.put(words[i], count);
+        }
+
+        for (int i = 0; i < strLength-concatLength+1; i++)
+        {
+
+            allMatch = true;
+
+            currentWords = s.substring(i, i+concatLength);
+            currentMap = new HashMap<>();
+
+            for (int j = 0; j < wordsLength; j++)
+            {
+
+                currentWord = currentWords.substring(wordLength*j, wordLength*(j+1));
+
+                // System.out.println(currentWord);
+
+                currentCount = currentMap.get(currentWord);
+
+                if (currentCount == null)
+                {
+                    currentCount = 1;
+                }
+                else
+                {
+                    currentCount++;
+                }
+
+                currentMap.put(currentWord, currentCount);
+
+            }
+
+            for (int j = 0; j < wordsLength; j++)
+            {
+
+                currentWord = words[j];
+
+                checkNum = currentMap.get(currentWord);
+                occurences = wordMap.get(currentWord); // cannot be null since these are words we know we have
+
+                if (checkNum == null)
+                {
+                    allMatch = false;
+                    break;
+                }
+                else
+                {
+
+                    if (checkNum.equals(occurences))
+                    {
+                        // good
+                        allMatch = true;
+                    }
+                    else
+                    {
+                        // bad
+                        allMatch = false;
+                        break;
+                    }
 
                 }
 
             }
 
-            if (wordList.size() == 0) {
-
-                returnList.add(startIndex);
-
+            if (allMatch == true)
+            {
+                // System.out.println(currentWords);
+                returnList.add(i);
             }
-            
-            startIndex += 1;
-            endIndex +=  1;
+
+            // System.out.println();
 
         }
-
-        System.out.println(returnList);
 
         return returnList;
 
@@ -50,12 +125,14 @@ public class lc30 {
 
     public static void main(String[] args) {
 
-        String s = "ababaab";
-        String[] words = {"ab","ba", "ba"};
+        String s = "barfoothefoobarman";
+        String[] words = {"foo","bar"};
     
         lc30 n = new lc30();
         
-        n.findSubstring(s, words);
+        List<Integer> indeces = n.findSubstring(s, words);
+
+        System.out.println("Indices: " + indeces);
     
     }
 
