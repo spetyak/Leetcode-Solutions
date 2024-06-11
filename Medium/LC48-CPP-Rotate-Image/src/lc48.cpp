@@ -16,7 +16,7 @@ public:
 
     void rotate(vector<vector<int>>& matrix) {
 
-        int matrixSize = matrix.size(); // get size of matrix side, better than recalculating later
+        int matrixSize = matrix.size(); // get size of matrix side ONCE, better than over and over
         
         int levels = (matrixSize / 2) + 1; // determine the number of levels/rings in the matrix
 
