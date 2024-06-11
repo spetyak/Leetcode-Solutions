@@ -3,7 +3,7 @@
 # Choose compiler and options
 #--------------------------------------------------------------------------------
 
-CC = gcc
+CC = g++
 OPTS = -O0
 DEBUG = -g
 
@@ -20,36 +20,37 @@ BINDIR=.
 # Add source files (use \ to continute line, not neeeded for last file)
 #--------------------------------------------------------------------------------
 # default
-SRCS=$(SRCDIR)/lc50.c
+SRCS=$(SRCDIR)/lc1.cpp
 
 #--------------------------------------------------------------------------------
 # Set compilation flags
 #--------------------------------------------------------------------------------
 INCLUDE = $(addprefix -I,$(INCDIR))
-OBJS = $(SRCS:$(SRCDIR)/%.c=$(OBJDIR)/%.o)
+OBJS = $(SRCS:$(SRCDIR)/%.cpp=$(OBJDIR)/%.o)
 CFLAGS = $(OPTS) $(INCLUDE) $(DEBUG)
 
 #--------------------------------------------------------------------------------
 # Put together all make instructions to create object files and executable
 #--------------------------------------------------------------------------------
-TARGET = $(BINDIR)/lc50
+TARGET = $(BINDIR)/lc1
 
 all: $(TARGET) 
 
 $(TARGET): $(OBJS)
 	$(CC) $(CFLAGS) -o $@ $(OBJS)
 
-$(OBJS): $(OBJDIR)/%.o : $(SRCDIR)/%.c
+$(OBJS): $(OBJDIR)/%.o : $(SRCDIR)/%.cpp
 	$(CC) $(CFLAGS) -c $< -o $@
 
 #--------------------------------------------------------------------------------
-# Remove all object files, but not executable
+# Removes all object files, but not executable
 #--------------------------------------------------------------------------------
 clean:
 	rm -f $(OBJS)
 
 #--------------------------------------------------------------------------------
-# Remopve object files AND executable
+# Removes object files AND executable
 #--------------------------------------------------------------------------------
 cleanall:
-	rm -f $(OBJS) $(BINDIR)/lc50
+	rm -f $(OBJS) $(BINDIR)/lc1
+	
