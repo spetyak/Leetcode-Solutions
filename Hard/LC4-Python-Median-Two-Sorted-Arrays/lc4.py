@@ -1,45 +1,41 @@
 import math
 
+"""
+Author: spetyak
+
+Runtime: Beats 60.33% of Python submissions
+Memory: Beats 26.52% of Python submissions
+
+"""
+
 class Solution:
 
     def findMedianSortedArrays(self, nums1, nums2):
 
-        combinedIndex = 0
+        combinedIndex = 0 # the current index stepping throught the arrays as if they were one
+        combinedLength = len(nums1) + len(nums2) # the combined lengths of the arrays
+        medianIndex = (combinedLength - 1) / 2 # the index of the median of the arrays
+        medianIndexCheck = False # False if median is a number in the array, True if it is between indices
+        medianLow = 0 # if median is between indices, the lower value
+        medianHigh = 0 # if median is between indices, the higher value
+        median = 0.0 # the median value of the arrays
 
-        combinedLength = len(nums1) + len(nums2)
-
-        # print("Combined length: " + str(combinedLength))
-
-        median = 0.0
-        
-        medianIndex = (combinedLength - 1) / 2
-        medianIndexSole = 0
-        medianIndexCheck = False
-        medianIndexLow = 0
-        medianIndexHigh = 0
-
-        if math.floor(medianIndex) == medianIndex:
-
-            print("Median is at index " + str(int(medianIndex)))
-
-        else:
+        if math.floor(medianIndex) != medianIndex: # if the median index is between two indices
 
             medianIndexCheck = True
             medianLow = int(math.floor(medianIndex))
             medianHigh = int(math.ceil(medianIndex))
 
-            print("Median is betwween indexes " + str(medianLow) + " and " + str(medianHigh))
 
-        # do binary search
 
-        i = 0
-        j = 0
+        i = 0 # index pointer for walking through nums1
+        j = 0 # index pointer for walking through nums2
 
-        while i < len(nums1) and j < len(nums2):
+        while i < len(nums1) and j < len(nums2): # walk arrays as if they are combined
 
-            if combinedIndex == math.floor(medianIndex):
+            if combinedIndex == math.floor(medianIndex): # if this index is the median index
 
-                if medianIndexCheck == False:
+                if medianIndexCheck == False: # if the median is a value in the array
 
                     if nums1[i] < nums2[j]:
 
@@ -49,18 +45,17 @@ class Solution:
 
                         median = nums2[j]
 
-                    break
+                    return median
 
-                else:
+                else: # the median value is between array indices
 
                     if nums1[i] < nums2[j]:
 
-                        # find low then determine where next would be
                         medianLow = nums1[i]
 
                         i += 1
 
-                        if nums1[i] < nums2[j]:
+                        if i < len(nums1) and nums1[i] < nums2[j]:
 
                             medianHigh = nums1[i]
 
@@ -70,44 +65,39 @@ class Solution:
 
                         median = (medianLow + medianHigh) / 2
 
-                        break
+                        return median
 
                     else:
 
-                        # find low then determine where next would be
                         medianLow = nums2[j]
 
                         j += 1
 
-                        if nums1[i] < nums2[j]:
-
-                            medianHigh = nums1[i]
-
-                        else:
+                        if j < len(nums2) and nums2[j] < nums1[i]:
 
                             medianHigh = nums2[j]
 
+                        else:
+
+                            medianHigh = nums1[i]
+
                         median = (medianLow + medianHigh) / 2
 
-                        break
-
-
+                        return median
 
             if nums1[i] < nums2[j]:
-
-                print(str(nums1[i]) + " is next number")
 
                 i += 1
                 combinedIndex += 1
 
             else:
 
-                print(str(nums2[j]) + " is next number")
-
                 j += 1
                 combinedIndex += 1
+                
 
-        while i < len(nums1):
+
+        while i < len(nums1): # if median has not been found yet and there are still numbers in nums1
 
             if combinedIndex == math.floor(medianIndex):
 
@@ -115,19 +105,21 @@ class Solution:
 
                     median = nums1[i]
 
-                    break
+                    return median
 
                 else:
 
-                    # do something 
-                    print()
+                    medianLow = nums1[i]
+                    medianHigh = nums1[i+1]
+                    
+                    median = (medianLow + medianHigh) / 2
 
-            print(str(nums1[i]) + " is next number")
+                    return median
 
             i += 1
             combinedIndex += 1
 
-        while j < len(nums2):
+        while j < len(nums2): # if median has not been found yet and there are still numbers in nums2
 
             if combinedIndex == math.floor(medianIndex):
 
@@ -135,14 +127,16 @@ class Solution:
 
                     median = nums2[j]
 
-                    break
+                    return median
 
                 else:
 
-                    # do something 
-                    print()
+                    medianLow = nums2[j]
+                    medianHigh = nums2[j+1]
+                    
+                    median = (medianLow + medianHigh) / 2
 
-            print(str(nums2[j]) + " is next number")
+                    return median
 
             j += 1
             combinedIndex += 1
@@ -154,13 +148,18 @@ class Solution:
 
 
 def main():
+    
+    sol = Solution()
 
     nums1 = [1, 2]
     nums2 = [3, 4]
 
-    sol = Solution()
+    print(f'Output1: {sol.findMedianSortedArrays(nums1, nums2)}')
+    
+    nums1 = [1]
+    nums2 = [2]
 
-    print(f'Output: {sol.findMedianSortedArrays(nums1, nums2)}')
+    print(f'Output2: {sol.findMedianSortedArrays(nums1, nums2)}')
 
     return
 
