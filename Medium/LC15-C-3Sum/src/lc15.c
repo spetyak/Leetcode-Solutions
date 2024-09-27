@@ -127,12 +127,12 @@ void mergeSort(int* nums, int numsSize, int* allocFail) {
  * Given an integer array nums, return all the unique triplets [nums[i], nums[j], nums[k]] 
  * such that i != j, i != k, and j != k, and nums[i] + nums[j] + nums[k] == 0.
  *
- * @param nums the array of numbers to be searched for valid triplets
+ * @param nums the array of numbers to be searched for valid 3sums
  * @param numsSize the size of the given array
- * @param returnSize the size of the triplet output array
+ * @param returnSize the size of the 3sum output array
  * @param returnColumnSizes the size of each of the output triplets (3)
  *
- * @return An array of valid triplet arrays.
+ * @return An array of valid 3sum arrays.
  */
 int** threeSum(int* nums, int numsSize, int* returnSize, int** returnColumnSizes) {
 
