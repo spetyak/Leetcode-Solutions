@@ -50,9 +50,11 @@ struct ListNode* createLinkedList(int* nums, int numsSize) {
             exit(-1);
         }
 
+        // initialize ListNode fields
         newNode->val = nums[i];
         newNode->next = NULL;
 
+        // if there is currently no node in the list
         if (head == NULL)
         {
             head = newNode;
@@ -104,6 +106,7 @@ void cleanup(struct ListNode* head) {
  */
 struct ListNode* removeNthFromEnd(struct ListNode* head, int n) {
 
+    // if there is only a single element in the given list
     if (head->next == NULL)
     {
         free(head);
@@ -112,6 +115,7 @@ struct ListNode* removeNthFromEnd(struct ListNode* head, int n) {
     else
     {
 
+        // add dummy node to front of linked list
         struct ListNode* dummyNode = malloc(sizeof(struct ListNode));
         if (!dummyNode)
         {
@@ -119,20 +123,23 @@ struct ListNode* removeNthFromEnd(struct ListNode* head, int n) {
             cleanup(head);
             exit(-1);
         }
-
         dummyNode->next = head;
         dummyNode->val = -1;
         head = dummyNode;
 
+        // initialize ruler pointers
         struct ListNode* left = head;
         struct ListNode* right = head->next;
 
+        // move right pointer so left pointer will be in correct position when right pointer 
+        // is shifted (while also shifting left pointer) to end of list
         while (n != 0)
         {
             right = right->next;
             n -= 1;
         }
 
+        // move left pointer to one node before target
         while (right != NULL)
         {
             left = left->next;
@@ -141,10 +148,12 @@ struct ListNode* removeNthFromEnd(struct ListNode* head, int n) {
 
         
 
+        // remove the specified node from the list
         struct ListNode* nodeToRemove = left->next;
         left->next = left->next->next;
-
         free(nodeToRemove);
+
+        // remove dummy node from front of list
         head = head->next;
         free(dummyNode);
 
@@ -156,12 +165,13 @@ struct ListNode* removeNthFromEnd(struct ListNode* head, int n) {
 
 int main() {
 
-    int nums[] = {1, 2, 3, 4, 5};
-    int numsSize = 5;
-    int distFromEnd = 5;
+    int nums[] = {1};
+    int numsSize = 1;
+    int distFromEnd = 1;
 
     struct ListNode* head = createLinkedList(nums, numsSize);
 
+    // print created list
     struct ListNode* current = head;
     while (current != NULL)
     {
@@ -172,10 +182,8 @@ int main() {
 
     head = removeNthFromEnd(head, distFromEnd);
 
-    
-
+    // print altered list
     current = head;
-    printf("Out here: %d\n", current->val);
     while (current != NULL)
     {
         printf("%d ", current->val);
