@@ -27,7 +27,7 @@ public class lc26 {
         {
 
             // if the current number is not a repeat
-            if (current != 0 && nums[current] != nums[current-1])
+            if (nums[current] != nums[current-1])
             {
                 nums[lastNonRepeat] = nums[current]; // add it to the unique sub array
                 lastNonRepeat++;
