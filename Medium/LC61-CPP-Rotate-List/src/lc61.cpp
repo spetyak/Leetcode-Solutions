@@ -8,7 +8,6 @@ using namespace std;
  *
  * Runtime: Beats 100% of C++ submissions
  * Memory: Beats 99.43% of C++ submissions
- * 
  */
 
 class Solution {
