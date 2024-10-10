@@ -17,17 +17,17 @@ public class lc66 {
      */
     public static int[] plusOne(int[] digits) {
 
-        int summ = 0;   //
-        int carry = 1;  //
+        int carry = 1;      // the carry digit of the sum, initially set to 1 to increment as required
+        int currentSum = 0; // the sum of the carry digit and the current digit
 
-        // 
+        // sum at each step and pass the carry digit if necessary
         for (int i = digits.length-1; i >= 0; i--)
         {
 
-            summ = digits[i] + carry;
+            currentSum = digits[i] + carry;
 
-            digits[i] = summ % 10;
-            carry = summ / 10;
+            digits[i] = currentSum % 10;
+            carry = currentSum / 10;
 
         }
 
