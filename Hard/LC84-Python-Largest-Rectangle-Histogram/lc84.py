@@ -65,6 +65,8 @@ class Solution(object):
             if (currentArea > maxArea):
                 
                 maxArea = currentArea
+                
+                
         
         return maxArea
     
