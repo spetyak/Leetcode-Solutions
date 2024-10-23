@@ -23,7 +23,7 @@ public class lc86 {
      * @param head the head of a linked list
      * @param x the value to partition the list with
      * 
-     * @return
+     * @return the linked list partitioned based on the value x
      */
     public static ListNode partition(ListNode head, int x) {
         
