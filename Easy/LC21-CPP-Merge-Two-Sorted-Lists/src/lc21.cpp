@@ -87,89 +87,59 @@ public:
      * @return A sorted list containing all of the values in the two given lists.
      */
     ListNode* mergeTwoLists(ListNode* list1, ListNode* list2) {
+
+        if (list1 == nullptr) // if list 1 is empty
+        {
+            return list2;
+        }
+
+        if (list2 == nullptr) // if list 2 is empty
+        {
+            return list1;
+        }
         
         ListNode* outputList = nullptr; // the merged output list
-        ListNode* tail = nullptr;    // the last element of the output list
+        ListNode* current = outputList;  // the current element pointed to in the output list
 
-        ListNode* leftCurrent = list1;
-        ListNode* rightCurrent = list2;
-
-        // attempt to walk through both lists values
-        while (leftCurrent != nullptr && rightCurrent != nullptr)
+        // while neither of the lists are empty
+        while (list1 != nullptr and list2 != nullptr)
         {
 
-            // if the output list is currently empty
-            if (outputList == nullptr)
+            ListNode* movedNode = nullptr; // the node being moved from one of the original lists
+
+            if (list1->val < list2->val)
             {
-
-                if (leftCurrent->val < rightCurrent->val)
-                {
-                    outputList = new ListNode(leftCurrent->val);
-                    tail = outputList;
-                    leftCurrent = leftCurrent->next;
-                }
-                else
-                {
-                    outputList = new ListNode(rightCurrent->val);
-                    tail = outputList;
-                    rightCurrent = rightCurrent->next;
-                }
-
+                movedNode = list1;
+                list1 = list1->next;
             }
             else
             {
-
-                if (leftCurrent->val < rightCurrent->val)
-                {
-                    ListNode* newNode = new ListNode(leftCurrent->val);
-                    tail->next = newNode;
-                    tail = newNode;
-                    leftCurrent = leftCurrent->next;
-                }
-                else
-                {
-                    ListNode* newNode = new ListNode(rightCurrent->val);
-                    tail->next = newNode;
-                    tail = newNode;
-                    rightCurrent = rightCurrent->next;
-                }
-
+                movedNode = list2;
+                list2 = list2->next;
             }
-            
+
+            if (outputList == nullptr) // output list has no head yet
+            {
+                outputList = movedNode;
+                current = outputList;
+            }
+            else
+            {
+                movedNode->next = nullptr;
+                current->next = movedNode;
+                current = current->next;
+            }
+
         }
 
-        // if list 2 is done but there are still elements in list 1 that need merged
-        while (leftCurrent != nullptr)
+        if (list1 != nullptr) // add rest of list 1 to output
         {
-            ListNode* newNode = new ListNode(leftCurrent->val);
-            if (outputList == nullptr)
-            {
-                outputList = newNode;
-                tail = outputList;
-            }
-            else
-            {
-                tail->next = newNode;
-                tail = newNode;
-            }
-            leftCurrent = leftCurrent->next;
+            current->next = list1;
         }
 
-        // if list 1 is done but there are still elements in list 2 that need merged
-        while (rightCurrent != nullptr)
+        if (list2 != nullptr) // add rest of list 2 to output
         {
-            ListNode* newNode = new ListNode(rightCurrent->val);
-            if (outputList == nullptr)
-            {
-                outputList = newNode;
-                tail = outputList;
-            }
-            else
-            {
-                tail->next = newNode;
-                tail = newNode;
-            }
-            rightCurrent = rightCurrent->next;
+            current->next = list2;
         }
 
         return outputList;
