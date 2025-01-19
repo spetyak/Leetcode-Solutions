@@ -23,9 +23,9 @@ public:
      */
     int maxProfit(vector<int>& prices) {
         
-        int maxPrice = prices[prices.size()-1]; //
-        int maxProfit = 0;                      //
-        int profit = 0;                         //
+        int maxPrice = prices[prices.size()-1]; // the max price found so far
+        int maxProfit = 0;                      // the max profit that could be generated so far
+        int profit = 0;                         // the current profit being considered
 
         // base case, can't buy AND sell in a single day
         if (prices.size() == 1)
