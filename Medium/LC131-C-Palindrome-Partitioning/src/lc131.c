@@ -2,44 +2,38 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <math.h>
 
 /*
  * Author: spetyak
  *
- * Runtime: Beats 5.33% of C submissions
- * Memory: Beats 5.33% of C submissions
+ * Runtime: Beats 69.56% of C submissions
+ * Memory: Beats 86.96% of C submissions
  */
 
 #define MAX_STRING_LENGTH 16
 
-char*** outputList;     // the list containing all substring partitions of the given string
-int outputIndex;        // the current partition being added to the output list
-int outputCapacity;     // the current capacity of the output list
-int* listSizes;         // global pointer used to help update partition list sizes
+char*** outputList;         // the list containing all palindromic partitions of the given string 
+int outputIndex;            // the new index of the output list to populate, also the list's size
+int* outputPartitionSizes;  // the number of splits in each partition in the output list
 
 /*
- * Checks if the given string is a palindrome.
+ * Determines if the given string is a palindrome.
  *
  * @param s the string to be checked
- * @param sLength the length of the given string
  * 
  * @return 1 if the given string is a palindrome, 0 if it is not.
  */
-int checkPalindrome(char* s, int sLength) {
+int checkPalindrome(char* s) {
 
-    if (sLength == 1)
+    int sLength = strnlen(s, MAX_STRING_LENGTH);
+
+    for (int i = 0; i < sLength/2; i++)
     {
-        return 1;
-    }
-
-    for (int i = 0; i < sLength / 2; i++)
-    {
-
         if (s[i] != s[sLength - i - 1])
         {
             return 0;
         }
-
     }
 
     return 1;
@@ -47,116 +41,107 @@ int checkPalindrome(char* s, int sLength) {
 }
 
 /*
- * Description
+ * Partitions the given source string into palindromic substrings by performing a DFT where
+ * palindromic substrings allow for further traversal if possible.
+ * Adds the resulting palindromic partition to the list of all possible palindromic 
+ * partitions of the source string.
  *
- * @param s
- * @param list
- * @param listIndex
- * @param low
- * @param high
+ * @param currentPartition the current palindromic partitioning being built from the source string
+ * @param numPartitions the number of partitions in the current partition
+ * @param partitionSizes the number of characters in each partition 
+ * @param sourceStr the string to be partitioned into different palindromes
+ * @param sourceStrLen the length of the given string to be partitioned
+ * @param sourceIndex the start index of the remaining substring
  */
-void helper(char* s, char** list, int listIndex, int low, int high) {
+void helper(char** currentPartition, int numPartitions, int* partitionSizes, char* sourceStr, int sourceStrLen, int sourceIndex) {
 
-    if (high > strnlen(s, MAX_STRING_LENGTH))
+    if (sourceIndex >= sourceStrLen) // check if all characters of the source string have been used
     {
+
+        // add to output list
+        char** partitionCopy = malloc(numPartitions * sizeof(char*));
+        for (int i = 0; i < numPartitions; i++)
+        {
+            partitionCopy[i] = malloc((partitionSizes[i]+1) * sizeof(char));
+            memset(partitionCopy[i], '\0', (partitionSizes[i]+1) * sizeof(char));
+            strncpy(partitionCopy[i], currentPartition[i], partitionSizes[i]);
+        }
+        outputList[outputIndex] = partitionCopy;
+        outputPartitionSizes[outputIndex] = numPartitions;
+        outputIndex++;
+
         return;
     }
 
-    int length = high - low;
-    char* substr = malloc((length+1) * sizeof(char));
-    strncpy(substr, s + low, length);
-    substr[length] = '\0';
-
-    if (checkPalindrome(substr, length))
+    // build substrings using the remaining characters of the source string
+    // if a substring is a palindrome, go deeper into the DFT and repeat this process
+    for (int i = 0; i < sourceStrLen-sourceIndex; i++)
     {
 
-        if (high + 1 > strnlen(s, MAX_STRING_LENGTH))
+        // build the substring
+        char sub[MAX_STRING_LENGTH+1]; // why did this up the time/space efficiency so much?
+        memset(sub, '\0', (MAX_STRING_LENGTH+1) * sizeof(char));
+        strncpy(sub, sourceStr+sourceIndex, i+1);
+
+        if (checkPalindrome(sub))
         {
 
-            int currentListSize = listIndex + 1;
-
-            list[listIndex] = substr;
-
-            // add/copy to output list
-            outputList[outputIndex] = malloc(currentListSize * sizeof(char**));
-            for (int i = 0; i < currentListSize; i++)
-            {
-                int currentStrLength = strnlen(list[i], MAX_STRING_LENGTH);
-                outputList[outputIndex][i] = malloc((currentStrLength + 1) * sizeof(char));
-                strncpy(outputList[outputIndex][i], list[i], currentStrLength);
-                outputList[outputIndex][i][currentStrLength] = '\0';
-            }
-            
-            listSizes[outputIndex] = currentListSize;
-            outputIndex++;
-
-            if (outputIndex == outputCapacity) // up output capacity if it has been reached
-            {
-
-                outputCapacity *= 2;
-                outputList = realloc(outputList, outputCapacity * sizeof(char**));
-                listSizes = realloc(listSizes, outputCapacity * sizeof(int));
-
-            }
-
-            free(list[listIndex]);
-            list[listIndex] = NULL;
-
-            return;
+            currentPartition[numPartitions] = sub; // add the substring to the current partition
+            partitionSizes[numPartitions] = strnlen(sub, MAX_STRING_LENGTH); // update the size in the size array
+            helper(currentPartition, numPartitions+1, partitionSizes, sourceStr, sourceStrLen, sourceIndex+strnlen(sub, MAX_STRING_LENGTH)); // go deeper into dfs
 
         }
-        else
-        {
-
-            list[listIndex] = substr;
-            listIndex++;
-            helper(s, list, listIndex, low+length, high+1); // DON'T attempt to add to the current palindrome 
-            listIndex--;
-
-            helper(s, list, listIndex, low, high+1); // DO attempt to add to the current palindrome 
-            free(list[listIndex]);
-            list[listIndex] = NULL;
-
-        } 
-
-    }
-    else // if the current substring is not a palindrome, it can only be considered with other characters until a palindrome is formed or all letters have been used
-    {
-
-        list[listIndex] = substr;
-        helper(s, list, listIndex, low, high+1); // DO attempt to add to the current palindrome 
-        free(list[listIndex]);
-        list[listIndex] = NULL;
 
     }
 
 }
 
 /*
- * Given a string s, partition s such that every substring of the partition is a palindrome. 
- * Return all possible palindrome partitioning of s.
+ * Given a string s, partitions s such that every substring of the partition is a palindrome. 
+ * Returns all possible palindrome partitionings of s.
  *
  * @param s the string to be partitioned into palindromes
  * @param returnSize the number of ways s can be partitioned into palindromes
  * @param returnColumnSizes the number of palindromes in each partition of s
  * 
- * @return a list containing all possible palindrome partitioning of s
+ * @return A list containing all possible palindrome partitioning of s.
  */
 char*** partition(char* s, int* returnSize, int** returnColumnSizes) {
     
-    outputList = malloc(100 * sizeof(char**));
-    outputCapacity = 100;
+    /*
+     * The current partition being created.
+     * Will eventually be copied to output list when a valid partition is finished.
+     */
+    char** currentPartition = malloc(MAX_STRING_LENGTH * sizeof(char*));
+    for (int i = 0; i < MAX_STRING_LENGTH; i++)
+    {
+        currentPartition[i] = malloc((MAX_STRING_LENGTH+1) * sizeof(char));
+        memset(currentPartition[i], '\0', (MAX_STRING_LENGTH+1) * sizeof(char));
+    }
+
+    /* 
+     * Keeps track of the sizes of the current partitions.
+     */
+    int* partitionSizes = malloc(MAX_STRING_LENGTH * sizeof(int));
+    memset(partitionSizes, 0, MAX_STRING_LENGTH * sizeof(int));
+
+    int sLen = strnlen(s, MAX_STRING_LENGTH); // the length of the given string
+
+    int numPossiblePartitions = pow(2, sLen-1); // the upper bound of possibilites is 2^(sLen-1)
+
+    /*
+     * Allocate the upper bound of space that may be needed for the given string.
+     */
+    outputList = malloc(numPossiblePartitions * sizeof(char**));
+    outputPartitionSizes = malloc(numPossiblePartitions * sizeof(int));
+    memset(outputPartitionSizes, 0, numPossiblePartitions * sizeof(int));
+
     outputIndex = 0;
 
-    char** list = malloc(MAX_STRING_LENGTH * sizeof(char*));
-    listSizes = malloc(100 * sizeof(int));
-
-    helper(s, list, 0, 0, 1);
-    
-    free(list);
+    helper(currentPartition, 0, partitionSizes, s, sLen, 0);
 
     *returnSize = outputIndex;
-    *returnColumnSizes = listSizes;
+    *returnColumnSizes = outputPartitionSizes;
 
     return outputList;
 
@@ -164,36 +149,30 @@ char*** partition(char* s, int* returnSize, int** returnColumnSizes) {
 
 int main() {
 
-    char* str = "efe";
+    // it works for me so screw leetcode if their stuff doesn't wanna run it for god-knows-why
+
+    char* str = "aaaaaaaaaaaaaaaa";
     int returnSize = 0;
     int* returnColumnSizes = NULL;
 
     char*** output = partition(str, &returnSize, &returnColumnSizes);
 
-    // print output list of 
-    printf("Output: [");
     for (int i = 0; i < returnSize; i++)
     {
-        printf("[");
-        for (int j = 0; j < returnColumnSizes[i]; j++)
-        {
-            printf("%s ", output[i][j]);
-        }
-        printf("] ");
-    }
-    printf("]\n");
 
-    // free output list and return column array
-    for (int i = 0; i < returnSize; i++)
-    {
+        printf("partition %d: [", i+1);
         for (int j = 0; j < returnColumnSizes[i]; j++)
         {
-            free(outputList[i][j]);
+
+            printf("%s ", output[i][j]);
+
         }
-        free(outputList[i]);
+        printf("]\n");
+
     }
-    free(outputList);
-    free(returnColumnSizes);
+
+    // free the output list
+    // free the returnColumnSizes array
 
     return 0;
 

@@ -1,0 +1,13 @@
+---
+triple:          'x86_64-apple-darwin'
+binary-path:     '/Users/sean/Documents/coding/leetcode/Medium/LC131-C-Palindrome-Partitioning/src/lc131'
+relocations:
+  - { offset: 0x26, size: 0x8, addend: 0x0, symName: _checkPalindrome, symObjAddr: 0x0, symBinAddr: 0x100000940, symSize: 0xA0 }
+  - { offset: 0x4D, size: 0x8, addend: 0x0, symName: _outputList, symBinAddr: 0x100002008, symSize: 0x0 }
+  - { offset: 0x71, size: 0x8, addend: 0x0, symName: _outputIndex, symBinAddr: 0x100002000, symSize: 0x0 }
+  - { offset: 0x8D, size: 0x8, addend: 0x0, symName: _outputPartitionSizes, symBinAddr: 0x100002010, symSize: 0x0 }
+  - { offset: 0x9B, size: 0x8, addend: 0x0, symName: _checkPalindrome, symObjAddr: 0x0, symBinAddr: 0x100000940, symSize: 0xA0 }
+  - { offset: 0xED, size: 0x8, addend: 0x0, symName: _helper, symObjAddr: 0xA0, symBinAddr: 0x1000009E0, symSize: 0x2F0 }
+  - { offset: 0x1D7, size: 0x8, addend: 0x0, symName: _partition, symObjAddr: 0x390, symBinAddr: 0x100000CD0, symSize: 0x170 }
+  - { offset: 0x26F, size: 0x8, addend: 0x0, symName: _main, symObjAddr: 0x500, symBinAddr: 0x100000E40, symSize: 0xD4 }
+...
